@@ -5,6 +5,9 @@ class Greeter(commands.Component):
     def __init__(self):
         self.setupquery = ""
 
+    async def setupInserts(self):
+        return
+
     @commands.command(aliases=["hello", "greetings"])
     async def greet(self, ctx: commands.Context) -> None:
         """Greets the command invoker

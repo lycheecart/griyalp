@@ -7,6 +7,7 @@ import logging
 from .secrets import Secrets
 from .localprinter import LocalPrinter
 from .greeter import Greeter
+from .sigils import SigilChatter
 
 SECRETS = Secrets()
 LOGGER: logging.Logger = logging.getLogger("Bot")
@@ -58,12 +59,16 @@ class Bot(commands.Bot):
     async def setup_database(self) -> None:
         await self.add_component(LocalPrinter())
         await self.add_component(Greeter())
+        await self.add_component(SigilChatter(self.token_database))
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
             await connection.execute(query)
             for comp in list(self._components.values()):
                 if len(comp.setupquery) > 0:
                     await connection.execute(comp.setupquery)
+        for comp in list(self._components.values()):
+            await comp.setupInserts()
+
 
 
     async def event_ready(self) -> None:

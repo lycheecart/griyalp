@@ -5,6 +5,9 @@ class LocalPrinter(commands.Component):
     def __init__(self):
         self.setupquery = ""
 
+    async def setupInserts(self):
+        return
+
     @commands.Component.listener()
     async def event_message(self, payload: twitchio.ChatMessage) -> None:
         print(f"[{payload.broadcaster.name}] - {payload.chatter.name}: {payload.text}")
