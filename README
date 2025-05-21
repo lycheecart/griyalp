@@ -1,0 +1,18 @@
+griyalp
+
+A chatbot for playing pretend. Saves "player info" to a sqlite database; provides randomized toys.
+
+Uses the twitchio library. Uses python 3.12 & asqlite.
+
+Each service is a separate python module in the components directory. The services are loaded in Bot::setup_database, invoked in griyalp.py. 
+
+The twitch_registrar.py is a stripped-down version of the bot
+adapted from the twitchio quickstart https://twitchio.dev/en/latest/getting-started/quickstart.html
+for registering chat permissions without spinning up a database
+
+ Run twitch_registrar.py 
+ Open a new browser / incognito mode, log in as the bot account and visit http://localhost:4343/oauth?scopes=user:read:chat%20user:write:chat%20user:bot 
+ In your main browser whilst logged in as your account, visit http://localhost:4343/oauth?scopes=channel:bot
+ Ctrl-C twitch-registrar.py
+
+ Run griyalp.py
