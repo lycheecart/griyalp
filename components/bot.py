@@ -9,6 +9,7 @@ from .localprinter import LocalPrinter
 from .greeter import Greeter
 from .sigils import SigilChatter
 from .choicer import Choicer
+from .emotesuggester import EmoteSuggester
 
 SECRETS = Secrets()
 LOGGER: logging.Logger = logging.getLogger("Bot")
@@ -62,6 +63,7 @@ class Bot(commands.Bot):
         await self.add_component(Greeter())
         await self.add_component(SigilChatter(self.token_database))
         await self.add_component(Choicer())
+        await self.add_component(EmoteSuggester(self.token_database))
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
             await connection.execute(query)
