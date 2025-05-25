@@ -64,6 +64,7 @@ class Bot(commands.Bot):
         await self.add_component(SigilChatter(self.token_database))
         await self.add_component(Choicer())
         await self.add_component(EmoteSuggester(self.token_database))
+        await self.add_component(Helper(self)) #helper has to be loaded last
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
             await connection.execute(query)
@@ -73,8 +74,69 @@ class Bot(commands.Bot):
         for comp in list(self._components.values()):
             await comp.setupInserts()
 
-
-
     async def event_ready(self) -> None:
         LOGGER.info("Successfully logged in as: %s", self.bot_id)
+
+class Helper(commands.Component):
+    def __init__(self, bot:Bot):
+        self.setupquery = ""
+        self.bot = bot
+
+    async def setupInserts(self):
+        return
+
+    @commands.command(name="commands",aliases=["!commands", "!command"])
+    async def help_commands(self, ctx: commands.Context) -> None:
+        """List the loaded commands
+
+        !commands
+        """
+        helpstr = "!choice !emote !greet !sigil"
+        await ctx.reply(f"{helpstr}")
+
+
+    @commands.group(name="help",invoke_fallback=False)
+    async def help(self, ctx:commands.Context) -> None:
+        """Command help
+
+        !help
+        """
+        helpstr = "usage's !help <command_name> (without brackets). commands are listed with !commands"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="choice", aliases=["!choice"])
+    async def help_choice(self, ctx: commands.Context) -> None:
+        """Choose from the args (delimited by the space char ' ') ex: !choice a b c
+
+        !help !choice, !help choice
+        """
+        helpstr = "Choose from the args (delimited by the space char ' ') ex: !choice a b c"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="emote", aliases=["!emote"])
+    async def help_emote(self, ctx: commands.Context) -> None:
+        """Suggest an emote for /me. ex: !emote; /me dances
+
+        !help !emote, !help emote
+        """
+        helpstr = "Suggest an emote for /me. ex: !emote; /me dances"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="greet", aliases=["!greet"])
+    async def help_greet(self, ctx: commands.Context) -> None:
+        """The bot'll say hi to the command invoker
+
+        !help !greet, !help greet
+        """
+        helpstr = "The bot'll say hi to the command invoker"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="sigil", aliases=["!glyph", "glyph", "!sigil"])
+    async def help_greet(self, ctx: commands.Context) -> None:
+        """Get a random sigil, or, glyph,
+
+        !help !sigil, !help sigil
+        """
+        helpstr = "Get a random sigil, or, glyph,"
+        await ctx.reply(f"{helpstr}")
 
