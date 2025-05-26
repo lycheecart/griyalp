@@ -10,6 +10,7 @@ from .greeter import Greeter
 from .sigils import SigilChatter
 from .choicer import Choicer
 from .emotesuggester import EmoteSuggester
+from .coolstory import CoolStory
 
 SECRETS = Secrets()
 LOGGER: logging.Logger = logging.getLogger("Bot")
@@ -64,6 +65,7 @@ class Bot(commands.Bot):
         await self.add_component(SigilChatter(self.token_database))
         await self.add_component(Choicer())
         await self.add_component(EmoteSuggester(self.token_database))
+        await self.add_component(CoolStory())
         await self.add_component(Helper(self)) #helper has to be loaded last
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
@@ -91,7 +93,7 @@ class Helper(commands.Component):
 
         !commands
         """
-        helpstr = "!choice !emote !greet !sigil"
+        helpstr = "!choice !emote !greet !sigil !coolstory"
         await ctx.reply(f"{helpstr}")
 
 
@@ -140,3 +142,11 @@ class Helper(commands.Component):
         helpstr = "Get a random sigil, or, glyph,"
         await ctx.reply(f"{helpstr}")
 
+    @help.command(name="coolstory", aliases=["!coolstory", "story", "!story"])
+    async def help_greet(self, ctx: commands.Context) -> None:
+        """The bot tells a cool story
+
+        !coolstory !story
+        """
+        helpstr = "The bot tells a cool story."
+        await ctx.reply(f"{helpstr}")
