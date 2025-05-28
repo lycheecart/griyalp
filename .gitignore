@@ -1,2 +1,5 @@
 __pycache__/
 tokens.db
+*.db-shm
+*.db-wal
+*.swp

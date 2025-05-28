@@ -11,6 +11,8 @@ from .sigils import SigilChatter
 from .choicer import Choicer
 from .emotesuggester import EmoteSuggester
 from .coolstory import CoolStory
+from .descer import Descer
+from .looker import Looker
 
 SECRETS = Secrets()
 LOGGER: logging.Logger = logging.getLogger("Bot")
@@ -66,6 +68,8 @@ class Bot(commands.Bot):
         await self.add_component(Choicer())
         await self.add_component(EmoteSuggester(self.token_database))
         await self.add_component(CoolStory())
+        await self.add_component(Descer(self.token_database))
+        await self.add_component(Looker(self.token_database))
         await self.add_component(Helper(self)) #helper has to be loaded last
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
@@ -93,7 +97,7 @@ class Helper(commands.Component):
 
         !commands
         """
-        helpstr = "!choice !emote !greet !sigil !coolstory"
+        helpstr = "!choice !emote !greet !sigil !coolstory !desc !look"
         await ctx.reply(f"{helpstr}")
 
 
@@ -149,4 +153,22 @@ class Helper(commands.Component):
         !coolstory !story
         """
         helpstr = "The bot tells a cool story."
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="desc", aliases=["!desc", "describe", "!describe"])
+    async def help_desc(self, ctx: commands.Context) -> None:
+        """Set your description. ex: !desc This here is a bristly hobgoblin."
+
+        !desc !describe
+        """
+        helpstr = "Set your description. ex: !desc This here is a bristly hobgoblin."
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="look", aliases=["!look", "l", "!l"])
+    async def help_look(self, ctx: commands.Context) -> None:
+        """Look at a single character and see their appearance. ex: !look griyalp"
+
+        !look !l
+        """
+        helpstr = "Look at a single character and see their appearance. ex: !look griyalp"
         await ctx.reply(f"{helpstr}")
