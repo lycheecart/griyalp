@@ -13,6 +13,7 @@ from .emotesuggester import EmoteSuggester
 from .coolstory import CoolStory
 from .descer import Descer
 from .looker import Looker
+from .dieroller import DieRoller
 
 SECRETS = Secrets()
 LOGGER: logging.Logger = logging.getLogger("Bot")
@@ -68,6 +69,7 @@ class Bot(commands.Bot):
         await self.add_component(Choicer())
         await self.add_component(EmoteSuggester(self.token_database))
         await self.add_component(CoolStory())
+        await self.add_component(DieRoller())
         await self.add_component(Descer(self.token_database))
         await self.add_component(Looker(self.token_database))
         await self.add_component(Helper(self)) #helper has to be loaded last
@@ -97,7 +99,7 @@ class Helper(commands.Component):
 
         !commands
         """
-        helpstr = "!choice !emote !greet !sigil !coolstory !desc !look"
+        helpstr = "!choice !emote !greet !sigil !coolstory !desc !look !roll"
         await ctx.reply(f"{helpstr}")
 
 
@@ -171,4 +173,13 @@ class Helper(commands.Component):
         !look !l
         """
         helpstr = "Look at a single character and see their appearance. ex: !look griyalp"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="roll", aliases=["!roll", "dieroll", "!dieroll"])
+    async def help_look(self, ctx: commands.Context) -> None:
+        """Roll XdY or XdYp or XdYe: ex !roll 5d6e
+
+        !roll !dieroll
+        """
+        helpstr = "Roll XdY or XdYp or XdYe. ex !roll 5d6e"
         await ctx.reply(f"{helpstr}")
