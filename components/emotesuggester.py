@@ -63,6 +63,7 @@ class EmoteSuggester(commands.Component):
         return
 
     @commands.command()
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
     async def emote(self, ctx: commands.Context) -> None:
         """Suggests an action for /me <emotes>
 

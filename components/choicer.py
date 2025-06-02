@@ -10,6 +10,7 @@ class Choicer(commands.Component):
         return
 
     @commands.command()
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
     async def choice(self, ctx: commands.Context, *, choices:str) -> None:
         """Returns a random choice from a list
 

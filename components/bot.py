@@ -94,6 +94,7 @@ class Helper(commands.Component):
         return
 
     @commands.command(name="commands",aliases=["!commands", "!command"])
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
     async def help_commands(self, ctx: commands.Context) -> None:
         """List the loaded commands
 

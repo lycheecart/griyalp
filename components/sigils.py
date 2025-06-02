@@ -469,6 +469,7 @@ class SigilChatter(commands.Component):
 
 
     @commands.command(aliases=["glyph"])
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
     async def sigil(self, ctx: commands.Context) -> None:
         """Chats a random glyph
 

@@ -10,7 +10,8 @@ class Looker(commands.Component):
         return
 
     @commands.command(aliases=["l", "examine"])
-    async def look(self, ctx: commands.Context, *, lookTarget:str) -> None:
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
+    async def look(self, ctx: commands.Context, *, lookTarget:str = "") -> None:
         """Looks at a single target
 
         !look !l !examine

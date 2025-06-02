@@ -10,7 +10,8 @@ class Descer(commands.Component):
         return
 
     @commands.command(aliases=["describe"])
-    async def desc(self, ctx: commands.Context, *, details:str) -> None:
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
+    async def desc(self, ctx: commands.Context, *, details:str="") -> None:
         """Set your description. ex: !desc This here is a bristly hobgoblin."
 
         !desc !describe

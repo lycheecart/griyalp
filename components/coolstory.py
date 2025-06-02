@@ -165,6 +165,7 @@ class CoolStory(commands.Component):
         return f"{self.op()} {self.activity()}, {self.ended_wh()} {self.end_reason()}."
 
     @commands.command(aliases=["story"])
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
     async def coolstory(self, ctx: commands.Context) -> None:
         """The bot tells a cool story
 

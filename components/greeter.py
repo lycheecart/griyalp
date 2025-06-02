@@ -9,6 +9,7 @@ class Greeter(commands.Component):
         return
 
     @commands.command(aliases=["hello", "greetings"])
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
     async def greet(self, ctx: commands.Context) -> None:
         """Greets the command invoker
 

@@ -108,6 +108,13 @@ class Roller:
         badConditions = [
             dieTerm[-1] == "d",
             "d1p" in dieTerm,
+            "d1P" in dieTerm,
+            "d1e" in dieTerm,
+            "d1E" in dieTerm,
+            "d1u" in dieTerm,
+            "d1U" in dieTerm,
+            "d1b" in dieTerm,
+            "d1B" in dieTerm,
             dieTerm == "-",
             dieTerm == ""
         ]
@@ -157,13 +164,19 @@ class DieRoller(commands.Component):
         return
 
     @commands.command(aliases=["dieroll"])
-    async def roll(self, ctx: commands.Context, *,  dieString: str) -> None:
+    @commands.cooldown(rate=2, per=10, key=commands.BucketType.chatter)
+    async def roll(self, ctx: commands.Context, *,  dieString:str = "") -> None:
         """Roll XdY or XdYp or XdYe: ex !roll 5d6e
 
         !roll !dieroll
         """
+        if len(dieString) > 0:
+            lastChar = dieString[-1]
+            if lastChar in "+-":
+                dieString+="0"
+
         if dieString.strip().replace(" ", "") == "":
-            return
+            await ctx.reply("spins a marble", me=True)
         else:
             await ctx.reply(f"{Roller().replyRoll(dieString)}")
 
