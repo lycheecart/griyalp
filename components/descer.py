@@ -10,22 +10,16 @@ class Descer(commands.Component):
         return
 
     @commands.command(aliases=["describe"])
-    async def desc(self, ctx: commands.Context) -> None:
-        """Looks at a single target
+    async def desc(self, ctx: commands.Context, *, details:str) -> None:
+        """Set your description. ex: !desc This here is a bristly hobgoblin."
 
-        !look !l !examine
+        !desc !describe
         """
         reply = ""
-        msgArray = ctx.message.text.split(" ", 256) #ctx.args doesn't work
-        numArgs = len(msgArray) - 1
+        details = details[:450]
         charname = ctx.chatter.display_name.rstrip()
-        if (numArgs > 0):
-            description = " ".join(msgArray[1:])
-            query = """INSERT OR REPLACE INTO characterdescs (charactername, desc) VALUES (?, ?)"""
-            async with self.database.acquire() as connection:
-                await connection.execute(query, (charname, description))
-            reply = f"desc set: {description}"
-        else:
+        descIsBlank = (details.rstrip() == "")
+        if descIsBlank: #functions as '!look me'
             query = "SELECT desc FROM characterdescs WHERE lower(charactername) = (?)"
             async with self.database.acquire() as connection:
                 async with connection.cursor() as cursor:
@@ -34,6 +28,11 @@ class Descer(commands.Component):
                     if row is None:
                         reply = f"{charname} is nondescript."
                     else:
-                        reply = f"{row[0]}"
+                        reply = f"[{charname}]: {row[0]}"
+        else: 
+            query = """INSERT OR REPLACE INTO characterdescs (charactername, desc) VALUES (?, ?)"""
+            async with self.database.acquire() as connection:
+                await connection.execute(query, (charname, details))
+            reply = f"desc set: {details}"
         await ctx.reply(reply)
 

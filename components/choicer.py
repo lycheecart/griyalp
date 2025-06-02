@@ -10,10 +10,9 @@ class Choicer(commands.Component):
         return
 
     @commands.command()
-    async def choice(self, ctx: commands.Context) -> None:
+    async def choice(self, ctx: commands.Context, *, choices:str) -> None:
         """Returns a random choice from a list
 
         !choice
         """
-        choices = ctx.message.text.split(" ", 52)[1:] #ctx.args doesn't work 
-        await ctx.reply(f"{rchx(choices)}")
+        await ctx.reply(f"{rchx(choices.split(" "))}")
