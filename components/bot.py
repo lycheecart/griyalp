@@ -14,6 +14,7 @@ from .coolstory import CoolStory
 from .descer import Descer
 from .looker import Looker
 from .dieroller import DieRoller
+from .titler import Titler
 
 SECRETS = Secrets()
 LOGGER: logging.Logger = logging.getLogger("Bot")
@@ -64,7 +65,7 @@ class Bot(commands.Bot):
 
     async def setup_database(self) -> None:
         await self.add_component(LocalPrinter())
-        await self.add_component(Greeter())
+        await self.add_component(Greeter(self.token_database))
         await self.add_component(SigilChatter(self.token_database))
         await self.add_component(Choicer())
         await self.add_component(EmoteSuggester(self.token_database))
@@ -72,6 +73,7 @@ class Bot(commands.Bot):
         await self.add_component(DieRoller())
         await self.add_component(Descer(self.token_database))
         await self.add_component(Looker(self.token_database))
+        await self.add_component(Titler(self.token_database))
         await self.add_component(Helper(self)) #helper has to be loaded last
         query = """CREATE TABLE IF NOT EXISTS tokens(user_id TEXT PRIMARY KEY, token TEXT NOT NULL, refresh TEXT NOT NULL)"""
         async with self.token_database.acquire() as connection:
@@ -100,7 +102,7 @@ class Helper(commands.Component):
 
         !commands
         """
-        helpstr = "!choice !emote !greet !sigil !coolstory !desc !look !roll"
+        helpstr = "!choice !emote !greet !title !untitle !honorific !desc !look !sigil !coolstory !roll"
         await ctx.reply(f"{helpstr}")
 
 
@@ -183,4 +185,31 @@ class Helper(commands.Component):
         !roll !dieroll
         """
         helpstr = "Roll XdY or XdYp or XdYe. ex !roll 5d6e"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="title")
+    async def help_look(self, ctx: commands.Context) -> None:
+        """Set your prefix- title to Ms, Mr, Lady, Lord, and more. ex !title Señora
+
+        !title
+        """
+        helpstr = "Set your title to Ms, Mr, Lady, Lord, and more."
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="honorific")
+    async def help_look(self, ctx: commands.Context) -> None:
+        """Set your honorific suffix eg san, sahab. ex !honorific the great and terrible 
+
+        !honorific
+        """
+        helpstr = "Set your honorific suffix eg san, sahab. ex !honorific the great and terrible"
+        await ctx.reply(f"{helpstr}")
+
+    @help.command(name="untitle")
+    async def help_look(self, ctx: commands.Context) -> None:
+        """Delete your titles and honorifics
+
+        !untitle !unhonorific !unhon
+        """
+        helpstr = "Delete your titles and honorifics"
         await ctx.reply(f"{helpstr}")
